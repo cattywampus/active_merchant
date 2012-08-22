@@ -114,6 +114,10 @@ federated_canada:
   login: demo
   password: password
 
+first_data_e4:
+  login: GATEWAY_ID
+  password: GATEWAY_PASSWORD
+
 first_pay:
   login:
   password:

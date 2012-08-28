@@ -4,7 +4,6 @@ class RemoteFirstDataE4Test < Test::Unit::TestCase
 
 
   def setup
-    Base.mode = :production
     @gateway = FirstDataE4Gateway.new(fixtures(:first_data_e4))
 
     @amount = 100

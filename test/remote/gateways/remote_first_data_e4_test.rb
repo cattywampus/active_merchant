@@ -4,14 +4,12 @@ class RemoteFirstDataE4Test < Test::Unit::TestCase
 
 
   def setup
-    Base.mode = :test
-
+    Base.mode = :production
     @gateway = FirstDataE4Gateway.new(fixtures(:first_data_e4))
 
     @amount = 100
     @credit_card = credit_card('4111111111111111')
-    @declined_card = credit_card('4005550000000019')
-    @declined_card.verification_value='111'
+    @declined_card = credit_card('4005550000000019', verification_value: '111')
 
     @options = {
       :order_id => '1',
@@ -23,24 +21,24 @@ class RemoteFirstDataE4Test < Test::Unit::TestCase
   def test_successful_purchase
     assert response = @gateway.purchase(@amount, @credit_card, @options)
     assert_success response
-    assert_equal 'Transaction Normal', response.message
+    assert_equal 'Approved', response.message
   end
 
-  #def test_unsuccessful_purchase
-  #  assert response = @gateway.purchase(@amount, @declined_card, @options)
-  #  assert_failure response
-  #  assert_equal 'REPLACE WITH FAILED PURCHASE MESSAGE', response.message
-  #end
+  def test_unsuccessful_purchase
+    assert response = @gateway.purchase(@amount, @declined_card, @options)
+    assert_failure response
+    assert_equal 'Invalid CC Number', response.message
+  end
 
   def test_authorize_and_capture
     amount = @amount
     assert auth = @gateway.authorize(amount, @credit_card, @options)
     assert_success auth
-    assert_equal 'Transaction Normal', auth.message
+    assert_equal 'Approved', auth.message
     assert auth.authorization
     assert capture = @gateway.capture(amount, auth.authorization)
     assert_success capture
-    assert_equal 'Transaction Normal', capture.message
+    assert_equal 'Approved', capture.message
   end
 
   def test_failed_capture

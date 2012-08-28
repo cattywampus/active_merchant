@@ -200,7 +200,7 @@ module ActiveMerchant #:nodoc:
       end
 
       def message_from(response)
-        response["exact_message"]
+        response["bank_message"]
       end
 
       def post_data(action, parameters = {})
